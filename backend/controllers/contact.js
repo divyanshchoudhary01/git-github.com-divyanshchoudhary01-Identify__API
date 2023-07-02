@@ -1,5 +1,15 @@
 const contactController=require('express').Router()
 const Contact=require('../models/Contact')
+contactController.get("/",async(req,res)=>{
+    try
+    {
+
+        return res.status(200).send("Welcome to the webservice identify endpoint");
+    }catch(error)
+    {
+
+    }
+})
 contactController.post('/',async(req,res)=>{
 try{
     if(req.body.email.length==0 && req.body.phoneNumber.length==0)
