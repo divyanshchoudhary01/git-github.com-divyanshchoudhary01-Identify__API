@@ -13,7 +13,7 @@ app.use(express.urlencoded({extended:true}))
 mongoose.connect(process.env.MONGODB_URL)
 
 
-
+app.use('/',contactController)
 app.use('/identify',contactController)
 app.listen(process.env.PORT, ()=>{ 
 
