@@ -7,6 +7,8 @@ contactController.get("/",async(req,res)=>{
         return res.status(200).send("Welcome to the webservice identify endpoint");
     }catch(error)
     {
+        return res.status(200).send("Welcome to the webservice identify endpoint");
+
 
     }
 })
