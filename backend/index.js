@@ -9,9 +9,13 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 //connect db
 //connect servercls
+app.use(express.static(path.join(__dirname,"./backend/build")))
 
 mongoose.connect(process.env.MONGODB_URL)
+app.get("*",(req,res)=>{
+res.sendFile(path.join(__dirname,"./backend/build/index.html"))
 
+})
 
 app.use('/',contactController)
 app.use('/identify',contactController)
