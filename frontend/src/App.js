@@ -5,7 +5,7 @@ const baseUrl='http://localhost:5000'
 const addPlacement=(data)=>{
   var promise= new Promise((resolve)=>{
   
-    var dataString=`email=${encodeURIComponent(data.email)}&phoneNumber=${encodeURIComponent(data.phoneNumber)}}`;
+    var dataString=`email=${encodeURIComponent(data.email)}&phoneNumber=${encodeURIComponent(data.phoneNumber)}`;
   fetch("/identify",{"method":"POST","headers":{"Content-Type":"application/x-www-form-urlencoded"} ,"body":dataString
   }).then((response)=>{return response.json();}).then((responseJSON)=>{ resolve(responseJSON); })
   
