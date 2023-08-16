@@ -823,7 +823,7 @@ else if(isEmailExists.linkPrecedence=='primary' && isPhoneNumberExits.linkPreced
                 isPhoneNumberExits1.linkedId=isEmailExists.id;
                 isPhoneNumberExits1.linkPrecedence="secondary";
                 const updatePost=await Contact.findByIdAndUpdate(
-                    isPhoneNumberExits1._id,{$set:isPhoneNumberExits},{new:true} )                   
+                    isPhoneNumberExits1._id,{$set:isPhoneNumberExits1},{new:true} )                   
 
                 //here we will consider isEmail as primary and traverse over the data send it
                 const contacts=await Contact.find({})
