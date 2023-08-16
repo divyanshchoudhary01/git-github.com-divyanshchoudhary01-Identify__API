@@ -19,9 +19,13 @@ try{
         return res.status(500).send({msg:"Email and Phone Number both are empty "})
 
     }
+    console.log(req.body.phoneNumber)
+   
+    console.log('1')
     const isEmailExists=await Contact.findOne({email:req.body.email});
+        console.log(req.body.phoneNumber)
     const isPhoneNumberExits=await Contact.findOne({phoneNumber:req.body.phoneNumber});
-
+    console.log('2')
     if((!(isEmailExists)) && (!(isPhoneNumberExits)))
     {
         const estimate = await Contact.estimatedDocumentCount();

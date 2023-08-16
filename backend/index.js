@@ -18,7 +18,7 @@ res.sendFile(path.join(__dirname,"./build/index.html"))
 })
 
 app.use('/',contactController)
-app.use('/identify',contactController)
+//app.use('/identify',contactController)
 app.listen(process.env.PORT, ()=>{ 
 
 console.log('Server is connected succssfully on port 5000')})
