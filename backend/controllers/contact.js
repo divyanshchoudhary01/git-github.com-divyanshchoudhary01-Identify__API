@@ -813,7 +813,11 @@ else
 
 else if(isEmailExists.linkPrecedence=='primary' && isPhoneNumberExits.linkPrecedence=='secondary' && isEmailExists.id!=isPhoneNumberExits.linkedId)
 {
- const isPhoneNumberExits1=await Contact.findOne({linkedId:isPhoneNumberExits.linkedId});    
+    console.log("abcdf");
+
+    const isPhoneNumberExits1=await Contact.findOne({id:isPhoneNumberExits.linkedId});    
+ 
+    console.log("epqdebefk")
     if(isEmailExists.createdAt<isPhoneNumberExits1.createdAt)
     {
                 isPhoneNumberExits1.linkedId=isEmailExists.id;
@@ -956,7 +960,7 @@ else if(isEmailExists.linkPrecedence=='secondary' && isPhoneNumberExits.linkPrec
 
 
     
-    const isEmailExists1=await Contact.findOne({linkedId:isEmailExists.linkedId});    
+    const isEmailExists1=await Contact.findOne({id:isEmailExists.linkedId});    
     if(isEmailExists1.createdAt<isPhoneNumberExits.createdAt)
     {
                 isPhoneNumberExits.linkedId=isEmailExists1.id;
