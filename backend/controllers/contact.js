@@ -617,8 +617,8 @@ else
         }
 
         }
-       else if(isEmailExists.linkPrecedence=='secondary' && isPhoneNumberExits.linkPrecedence=='secondary' && isEmailExists.id!=isPhoneNumberExits && isEmailExists.linkedId==isPhoneNumberExits.linkedId)
-       {
+       else if(isEmailExists.linkPrecedence=='secondary' && isPhoneNumberExits.linkPrecedence=='secondary' && isEmailExists.id!=isPhoneNumberExits.id && isEmailExists.linkedId==isPhoneNumberExits.linkedId)
+        {
         const contacts=await Contact.find({})
         var i=0;
         const obj={ 
@@ -687,6 +687,7 @@ else
         const contacts=await Contact.find({})
         var i=0;
         const obj={ 
+
             "primaryContatctId":Number,
         "emails": [], // first element being email of primary contact 
         "phoneNumbers": [], // first element being phoneNumber of primary contact
@@ -808,9 +809,452 @@ else
 
         
        }
+//---------------------
+
+else if(isEmailExists.linkPrecedence=='primary' && isPhoneNumberExits.linkPrecedence=='secondary' && isEmailExists.id!=isPhoneNumberExits.linkedId)
+{
+ const isPhoneNumberExits1=await Contact.findOne({linkedId:isPhoneNumberExits.linkedId});    
+    if(isEmailExists.createdAt<isPhoneNumberExits1.createdAt)
+    {
+                isPhoneNumberExits1.linkedId=isEmailExists.id;
+                isPhoneNumberExits1.linkPrecedence="secondary";
+                const updatePost=await Contact.findByIdAndUpdate(
+                    isPhoneNumberExits1._id,{$set:isPhoneNumberExits},{new:true} )                   
+
+                //here we will consider isEmail as primary and traverse over the data send it
+                const contacts=await Contact.find({})
+                var i=0;
+                while(i<contacts.length)
+                {
+                    if(contacts[i].linkedId==isPhoneNumberExits1.id)
+                    {
+                        contacts[i].linkedId=isEmailExists.id
+                        const updatePost=await Contact.findByIdAndUpdate(
+                            contacts[i]._id,{$set:contacts[i]},{new:true} )                           
+
+                    }
+                    i++;
+            
+                }
+    
+                
+
+                
+                const obj={ 
+                    "primaryContatctId":Number,
+                "emails": [], // first element being email of primary contact 
+                "phoneNumbers": [], // first element being phoneNumber of primary contact
+                "secondaryContactIds": [] // Array of all Contact IDs that are "secondary" to the primary contact
+            }
+            //check whether the data is primary or not
+            //if primary then take out its id and traverse over all the data with that specified id
+                obj["primaryContatctId"]=isEmailExists.id
+                obj["emails"].push(isEmailExists.email)
+                obj["phoneNumbers"].push(isEmailExists.phoneNumber)
+            const lk=isEmailExists.id;
+            i=0
+            while(i<contacts.length)
+            {
+                if(contacts[i].linkedId==lk)
+                {
+           if(!(obj["emails"].includes(contacts[i].email)))         obj["emails"].push(contacts[i].email);
+           if(!(obj["phoneNumbers"].includes(contacts[i].phoneNumber)))         obj["phoneNumbers"].push(contacts[i].phoneNumber)
+                    obj["secondaryContactIds"].push(contacts[i].id);
+                }
+                i++;
+        
+            }
+            const c1={"contact":{...obj}}
+            
+            return res.status(200).send(c1);
+        
+            
+    
+    
 
 
- 
+            }
+            else
+            {
+                isEmailExists.linkedId=isPhoneNumberExits1.id;
+                isEmailExists.linkPrecedence="secondary";
+                
+
+                
+                
+                
+                const updatePost=await Contact.findByIdAndUpdate(
+                    isEmailExists._id,{$set:isEmailExists},{new:true} )                   
+                const contacts=await Contact.find({})
+                var i=0;
+                while(i<contacts.length)
+                {
+                    if(contacts[i].linkedId==isEmailExists.id)
+                    {
+                        contacts[i].linkedId=isPhoneNumberExits1.id
+                        const updatePost=await Contact.findByIdAndUpdate(
+                            contacts[i]._id,{$set:contacts[i]},{new:true} )                           
+
+                    }
+                    i++;
+            
+                }
+    
+                const obj={ 
+                    "primaryContatctId":Number,
+                "emails": [], // first element being email of primary contact 
+                "phoneNumbers": [], // first element being phoneNumber of primary contact
+                "secondaryContactIds": [] // Array of all Contact IDs that are "secondary" to the primary contact
+            }
+            //check whether the data is primary or not
+            //if primary then take out its id and traverse over all the data with that specified id
+        
+                obj["primaryContatctId"]=isPhoneNumberExits1.id
+                obj["emails"].push(isPhoneNumberExits1.email)
+                obj["phoneNumbers"].push(isPhoneNumberExits1.phoneNumber)
+            const lk=isPhoneNumberExits1.id;
+            i=0
+            while(i<contacts.length)
+            {
+                if(contacts[i].linkedId==lk)
+                {
+           if(!(obj["emails"].includes(contacts[i].email)))         obj["emails"].push(contacts[i].email);
+           if(!(obj["phoneNumbers"].includes(contacts[i].phoneNumber)))         obj["phoneNumbers"].push(contacts[i].phoneNumber)
+                    obj["secondaryContactIds"].push(contacts[i].id);
+                }
+                i++;
+        
+            }
+            const c1={"contact":{...obj}}
+            
+            return res.status(200).send(c1);
+        
+            
+        
+    
+    
+
+
+            
+            }
+
+
+
+
+
+//-----------------------changes here--------------- 
+}
+
+//-------- 
+    
+    
+//--------------
+
+
+else if(isEmailExists.linkPrecedence=='secondary' && isPhoneNumberExits.linkPrecedence=='primary' && isEmailExists.linkedId!=isPhoneNumberExits.id)
+{
+
+
+    
+    const isEmailExists1=await Contact.findOne({linkedId:isEmailExists.linkedId});    
+    if(isEmailExists1.createdAt<isPhoneNumberExits.createdAt)
+    {
+                isPhoneNumberExits.linkedId=isEmailExists1.id;
+                isPhoneNumberExits.linkPrecedence="secondary";
+                const updatePost=await Contact.findByIdAndUpdate(
+                    isPhoneNumberExits._id,{$set:isPhoneNumberExits},{new:true} )                   
+
+                //here we will consider isEmail as primary and traverse over the data send it
+                const contacts=await Contact.find({})
+                var i=0;
+                while(i<contacts.length)
+                {
+                    if(contacts[i].linkedId==isPhoneNumberExits.id)
+                    {
+                        contacts[i].linkedId=isEmailExists1.id
+                        const updatePost=await Contact.findByIdAndUpdate(
+                            contacts[i]._id,{$set:contacts[i]},{new:true} )                           
+
+                    }
+                    i++;
+            
+                }
+    
+                
+
+                
+                const obj={ 
+                    "primaryContatctId":Number,
+                "emails": [], // first element being email of primary contact 
+                "phoneNumbers": [], // first element being phoneNumber of primary contact
+                "secondaryContactIds": [] // Array of all Contact IDs that are "secondary" to the primary contact
+            }
+            //check whether the data is primary or not
+            //if primary then take out its id and traverse over all the data with that specified id
+                obj["primaryContatctId"]=isEmailExists1.id
+                obj["emails"].push(isEmailExists1.email)
+                obj["phoneNumbers"].push(isEmailExists1.phoneNumber)
+            const lk=isEmailExists1.id;
+            i=0
+            while(i<contacts.length)
+            {
+                if(contacts[i].linkedId==lk)
+                {
+           if(!(obj["emails"].includes(contacts[i].email)))         obj["emails"].push(contacts[i].email);
+           if(!(obj["phoneNumbers"].includes(contacts[i].phoneNumber)))         obj["phoneNumbers"].push(contacts[i].phoneNumber)
+                    obj["secondaryContactIds"].push(contacts[i].id);
+                }
+                i++;
+        
+            }
+            const c1={"contact":{...obj}}
+            
+            return res.status(200).send(c1);
+        
+            
+    
+    
+
+
+            }
+            else
+            {
+                isEmailExists1.linkedId=isPhoneNumberExits.id;
+                isEmailExists1.linkPrecedence="secondary";
+                
+
+                
+                
+                
+                const updatePost=await Contact.findByIdAndUpdate(
+                    isEmailExists1._id,{$set:isEmailExists1},{new:true} )                   
+                const contacts=await Contact.find({})
+                var i=0;
+                while(i<contacts.length)
+                {
+                    if(contacts[i].linkedId==isEmailExists1.id)
+                    {
+                        contacts[i].linkedId=isPhoneNumberExits.id
+                        const updatePost=await Contact.findByIdAndUpdate(
+                            contacts[i]._id,{$set:contacts[i]},{new:true} )                           
+
+                    }
+                    i++;
+            
+                }
+    
+                const obj={ 
+                    "primaryContatctId":Number,
+                "emails": [], // first element being email of primary contact 
+                "phoneNumbers": [], // first element being phoneNumber of primary contact
+                "secondaryContactIds": [] // Array of all Contact IDs that are "secondary" to the primary contact
+            }
+            //check whether the data is primary or not
+            //if primary then take out its id and traverse over all the data with that specified id
+        
+                obj["primaryContatctId"]=isPhoneNumberExits.id
+                obj["emails"].push(isPhoneNumberExits.email)
+                obj["phoneNumbers"].push(isPhoneNumberExits.phoneNumber)
+            const lk=isPhoneNumberExits.id;
+            i=0
+            while(i<contacts.length)
+            {
+                if(contacts[i].linkedId==lk)
+                {
+           if(!(obj["emails"].includes(contacts[i].email)))         obj["emails"].push(contacts[i].email);
+           if(!(obj["phoneNumbers"].includes(contacts[i].phoneNumber)))         obj["phoneNumbers"].push(contacts[i].phoneNumber)
+                    obj["secondaryContactIds"].push(contacts[i].id);
+                }
+                i++;
+        
+            }
+            const c1={"contact":{...obj}}
+            
+            return res.status(200).send(c1);
+        
+            
+        
+    
+    
+
+
+            
+            }
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
+
+//----------------
+else if(isEmailExists.linkPrecedence=='secondary' && isPhoneNumberExits.linkPrecedence=='secondary' && isEmailExists.id!=isPhoneNumberExits.id && isEmailExists.linkedId!=isPhoneNumberExits.linkedId)
+{
+
+
+
+
+
+
+    const isEmailExists1=await Contact.findOne({id:isEmailExists.linkedId});    
+    const isPhoneNumberExits1=await Contact.findOne({id:isPhoneNumberExits.linkedId})
+    if(isEmailExists1.createdAt<isPhoneNumberExits1.createdAt)
+    {
+                isPhoneNumberExits1.linkedId=isEmailExists1.id;
+                isPhoneNumberExits1.linkPrecedence="secondary";
+                const updatePost=await Contact.findByIdAndUpdate(
+                    isPhoneNumberExits1._id,{$set:isPhoneNumberExits1},{new:true} )                   
+
+                //here we will consider isEmail as primary and traverse over the data send it
+                const contacts=await Contact.find({})
+                var i=0;
+                while(i<contacts.length)
+                {
+                    if(contacts[i].linkedId==isPhoneNumberExits1.id)
+                    {
+                        contacts[i].linkedId=isEmailExists1.id
+                        const updatePost=await Contact.findByIdAndUpdate(
+                            contacts[i]._id,{$set:contacts[i]},{new:true} )                           
+
+                    }
+                    i++;
+            
+                }
+    
+                
+
+                
+                const obj={ 
+                    "primaryContatctId":Number,
+                "emails": [], // first element being email of primary contact 
+                "phoneNumbers": [], // first element being phoneNumber of primary contact
+                "secondaryContactIds": [] // Array of all Contact IDs that are "secondary" to the primary contact
+            }
+            //check whether the data is primary or not
+            //if primary then take out its id and traverse over all the data with that specified id
+                obj["primaryContatctId"]=isEmailExists1.id
+                obj["emails"].push(isEmailExists1.email)
+                obj["phoneNumbers"].push(isEmailExists1.phoneNumber)
+            const lk=isEmailExists1.id;
+            i=0
+            while(i<contacts.length)
+            {
+                if(contacts[i].linkedId==lk)
+                {
+           if(!(obj["emails"].includes(contacts[i].email)))         obj["emails"].push(contacts[i].email);
+           if(!(obj["phoneNumbers"].includes(contacts[i].phoneNumber)))         obj["phoneNumbers"].push(contacts[i].phoneNumber)
+                    obj["secondaryContactIds"].push(contacts[i].id);
+                }
+                i++;
+        
+            }
+            const c1={"contact":{...obj}}
+            
+            return res.status(200).send(c1);
+        
+            
+    
+    
+
+
+            }
+            else
+            {
+                isEmailExists1.linkedId=isPhoneNumberExits1.id;
+                isEmailExists1.linkPrecedence="secondary";
+                
+
+                
+                
+                
+                const updatePost=await Contact.findByIdAndUpdate(
+                    isEmailExists1._id,{$set:isEmailExists1},{new:true} )                   
+                const contacts=await Contact.find({})
+                var i=0;
+                while(i<contacts.length)
+                {
+                    if(contacts[i].linkedId==isEmailExists1.id)
+                    {
+                        contacts[i].linkedId=isPhoneNumberExits1.id
+                        const updatePost=await Contact.findByIdAndUpdate(
+                            contacts[i]._id,{$set:contacts[i]},{new:true} )                           
+
+                    }
+                    i++;
+            
+                }
+    
+                const obj={ 
+                    "primaryContatctId":Number,
+                "emails": [], // first element being email of primary contact 
+                "phoneNumbers": [], // first element being phoneNumber of primary contact
+                "secondaryContactIds": [] // Array of all Contact IDs that are "secondary" to the primary contact
+            }
+            //check whether the data is primary or not
+            //if primary then take out its id and traverse over all the data with that specified id
+        
+                obj["primaryContatctId"]=isPhoneNumberExits1.id
+                obj["emails"].push(isPhoneNumberExits1.email)
+                obj["phoneNumbers"].push(isPhoneNumberExits1.phoneNumber)
+            const lk=isPhoneNumberExits1.id;
+            i=0
+            while(i<contacts.length)
+            {
+                if(contacts[i].linkedId==lk)
+                {
+           if(!(obj["emails"].includes(contacts[i].email)))         obj["emails"].push(contacts[i].email);
+           if(!(obj["phoneNumbers"].includes(contacts[i].phoneNumber)))         obj["phoneNumbers"].push(contacts[i].phoneNumber)
+                    obj["secondaryContactIds"].push(contacts[i].id);
+                }
+                i++;
+        
+            }
+            const c1={"contact":{...obj}}
+            
+            return res.status(200).send(c1);
+        
+            
+        
+    
+    
+
+
+            
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+
+
+
     }
     //const {password,...others}=newUser._doc;
 }catch(error)
